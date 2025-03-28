@@ -44,7 +44,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <AppSidebar onPageChange={handlePageChange} activePage={activePage} />
-        <SidebarTrigger className="" />
+        <SidebarTrigger className="fixed left-0 z-10" />
         <main className="ml-2 flex justify-center">{renderContent()}</main>
       </div>
     </SidebarProvider>

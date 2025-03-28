@@ -5,6 +5,7 @@ import {
   ResizablePanelGroup,
 } from "./ui/resizable";
 import { BibleSelector } from "./common/bible-selector";
+import NotesEditor from "./common/NotesEditor";
 
 interface Verse {
   verse_number: number;
@@ -50,15 +51,13 @@ export default function BibleReader() {
     setChapter(selectedChapter);
   };
 
-  console.log(chunks, verses);
-
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="min-h-[200px] max-w-md rounded-lg border md:min-w-screen"
+      className="min-h-[200px] max-w-md rounded-lg md:min-w-screen"
     >
       <ResizablePanel defaultSize={25}>
-        <div className="container mx-auto p-4">
+        <div className="container mx-auto p-6">
           <div className="mb-6">
             <BibleSelector
               onSelectionChange={handleSelectionChange}
@@ -89,7 +88,9 @@ export default function BibleReader() {
         </div>
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={75}>Notes</ResizablePanel>
+      <ResizablePanel defaultSize={75}>
+        <NotesEditor />
+      </ResizablePanel>
     </ResizablePanelGroup>
   );
 }
