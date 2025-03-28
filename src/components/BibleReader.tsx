@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "./ui/resizable";
 import { BibleSelector } from "./common/bible-selector";
 
 interface Verse {
@@ -50,34 +53,43 @@ export default function BibleReader() {
   console.log(chunks, verses);
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="mb-6">
-        <BibleSelector
-          onSelectionChange={handleSelectionChange}
-          initialBook={book}
-          initialChapter={chapter}
-        />
-      </div>
-      <div className="flex max-w-[600px] flex-col">
-        {chunks.map((chunk, chunkIndex) => (
-          <p key={chunkIndex} className="verse-paragraph">
-            {chunk.map((verse, index) => (
-              // Add tab to first verse in each paragraph
-              <span key={index} className="verse">
-                <span
-                  className={
-                    "verse-number align-super text-sm text-gray-500" +
-                    (index == 0 ? " ml-4" : "")
-                  }
-                >
-                  {verse.verse_number}
-                </span>{" "}
-                {verse.text}{" "}
-              </span>
+    <ResizablePanelGroup
+      direction="horizontal"
+      className="min-h-[200px] max-w-md rounded-lg border md:min-w-screen"
+    >
+      <ResizablePanel defaultSize={25}>
+        <div className="container mx-auto p-4">
+          <div className="mb-6">
+            <BibleSelector
+              onSelectionChange={handleSelectionChange}
+              initialBook={book}
+              initialChapter={chapter}
+            />
+          </div>
+          <div className="flex flex-col">
+            {chunks.map((chunk, chunkIndex) => (
+              <p key={chunkIndex} className="verse-paragraph">
+                {chunk.map((verse, index) => (
+                  // Add tab to first verse in each paragraph
+                  <span key={index} className="verse">
+                    <span
+                      className={
+                        "verse-number align-super text-sm text-gray-500" +
+                        (index == 0 ? " ml-4" : "")
+                      }
+                    >
+                      {verse.verse_number}
+                    </span>{" "}
+                    {verse.text}{" "}
+                  </span>
+                ))}
+              </p>
             ))}
-          </p>
-        ))}
-      </div>
-    </div>
+          </div>
+        </div>
+      </ResizablePanel>
+      <ResizableHandle withHandle />
+      <ResizablePanel defaultSize={75}>Notes</ResizablePanel>
+    </ResizablePanelGroup>
   );
 }
