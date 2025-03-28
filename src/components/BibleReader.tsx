@@ -54,9 +54,9 @@ export default function BibleReader() {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="min-h-[200px] max-w-md rounded-lg md:min-w-screen"
+      className="min-h-[200px] max-w-md rounded-lg md:min-w-fit"
     >
-      <ResizablePanel defaultSize={25}>
+      <ResizablePanel defaultSize={50}>
         <div className="container mx-auto p-6">
           <div className="mb-6">
             <BibleSelector
@@ -88,7 +88,7 @@ export default function BibleReader() {
         </div>
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={75}>
+      <ResizablePanel defaultSize={50}>
         <NotesEditor />
       </ResizablePanel>
     </ResizablePanelGroup>

@@ -31,6 +31,7 @@ const NotesEditor: React.FC = () => {
 
   return (
     <div>
+      <h3 className="bold flex w-full justify-center text-2xl">Notes</h3>
       <EditorContent editor={editor} className="border p-6" />
     </div>
   );

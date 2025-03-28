@@ -16,10 +16,16 @@ type CommandOption = {
 
 const options: CommandOption[] = [
   {
+    title: "Heading 1",
+    command: (editor) => {
+      console.log("Executing Heading 1 command");
+      return editor.commands.toggleHeading({ level: 1 });
+    },
+  },
+  {
     title: "Heading 2",
     command: (editor) => {
       console.log("Executing Heading 2 command");
-      // Try a more direct approach with explicit focus
       return editor.commands.toggleHeading({ level: 2 });
     },
   },
@@ -27,17 +33,36 @@ const options: CommandOption[] = [
     title: "Bullet List",
     command: (editor) => {
       console.log("Executing Bullet List command");
-      // Try a more direct approach with explicit focus
       return editor.commands.toggleBulletList();
     },
   },
   {
-    title: "Italic",
-    command: (editor) => editor.chain().focus().toggleItalic().run(),
+    title: "Numbered List",
+    command: (editor) => {
+      console.log("Executing Numbered List command");
+      return editor.commands.toggleOrderedList();
+    },
   },
   {
-    title: "Bold",
-    command: (editor) => editor.chain().focus().toggleBold().run(),
+    title: "Horizontal Rule",
+    command: (editor) => {
+      console.log("Executing Horizontal Rule command");
+      return editor.commands.setHorizontalRule();
+    },
+  },
+  {
+    title: "Undo",
+    command: (editor) => {
+      console.log("Executing Undo command");
+      return editor.commands.undo();
+    },
+  },
+  {
+    title: "Redo",
+    command: (editor) => {
+      console.log("Executing Redo command");
+      return editor.commands.redo();
+    },
   },
 ];
 
@@ -178,11 +203,14 @@ const SlashMenu: React.FC<SlashMenuProps> = ({ editor, items, command }) => {
   const menuItemStyle = (isSelected: boolean) => ({
     padding: "8px 12px",
     cursor: "pointer",
-    backgroundColor: isSelected ? "#e9ecef" : "transparent",
+    backgroundColor: isSelected ? "var(--accent)" : "transparent",
+    color: isSelected ? "var(--accent-foreground)" : "var(--foreground)",
     fontWeight: isSelected ? "bold" : "normal",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    borderRadius: "4px",
+    margin: "2px 0",
   });
 
   // In the SlashMenu component's useEffect for keyboard handling
@@ -221,12 +249,13 @@ const SlashMenu: React.FC<SlashMenuProps> = ({ editor, items, command }) => {
     <div
       className="slash-menu"
       style={{
-        background: "white",
-        border: "1px solid #ccc",
-        borderRadius: "4px",
-        boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+        background: "var(--background)",
+        border: "1px solid var(--border)",
+        borderRadius: "6px",
+        boxShadow: "0 2px 15px rgba(0,0,0,0.1)",
         minWidth: "180px",
         zIndex: 1000,
+        padding: "4px",
       }}
     >
       {items.map((item, index) => (
@@ -243,7 +272,11 @@ const SlashMenu: React.FC<SlashMenuProps> = ({ editor, items, command }) => {
         >
           <span>{item.title}</span>
           {index === selectedIndex && (
-            <span style={{ fontSize: "0.8em", color: "#666" }}>↵</span>
+            <span
+              style={{ fontSize: "0.8em", color: "var(--muted-foreground)" }}
+            >
+              ↵
+            </span>
           )}
         </div>
       ))}
