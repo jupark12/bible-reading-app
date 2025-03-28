@@ -39,7 +39,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <SidebarProvider>
       <ThemeProvider>
-        <div className={geist.className + " flex min-w-screen"}>
+        <div className={geist.className + " flex w-full"}>
           <Head>
             <title>Bible Reading App</title>
             <meta name="description" content="Read the Bible with this app" />
@@ -47,7 +47,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           </Head>
           <AppSidebar onPageChange={handlePageChange} activePage={activePage} />
           <SidebarTrigger className="fixed left-0 z-10" />
-          <main className="ml-2 flex flex-1 justify-center overflow-x-hidden">
+          <main className="flex flex-1 justify-center overflow-x-hidden">
             {renderContent()}
           </main>
         </div>

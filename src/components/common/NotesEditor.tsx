@@ -18,7 +18,7 @@ const NotesEditor: React.FC = () => {
     extensions: [
       StarterKit, // Use default StarterKit without configuration
       Placeholder.configure({
-        placeholder: "Write your notes about this passage...",
+        placeholder: "Write notes or use / to insert a command...",
       }),
       SlashCommand,
     ],
@@ -69,7 +69,10 @@ const NotesEditor: React.FC = () => {
         </div>
       </div>
 
-      <EditorContent editor={editor} className="p-6" />
+      <EditorContent
+        editor={editor}
+        className="m-4 border-t-2 border-b-2 border-dashed py-6"
+      />
     </div>
   );
 };
