@@ -93,7 +93,7 @@ export default function BibleReader() {
     >
       <ResizablePanel defaultSize={50} minSize={25}>
         <div className="container mx-auto p-6">
-          <div className="mb-6">
+          <div className="mb-6 flex w-full justify-center">
             <BibleSelector
               onSelectionChange={handleSelectionChange}
               initialBook={book}

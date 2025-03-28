@@ -2,10 +2,12 @@ import {
   Calendar,
   Home,
   Inbox,
+  LogOut,
   Search,
   Settings,
   type LucideIcon,
 } from "lucide-react";
+import { useState } from "react";
 
 import {
   Sidebar,
@@ -17,9 +19,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
 } from "../ui/sidebar";
 import { ThemeToggle } from "../ui/theme-toggle";
+import { Button } from "../ui/button";
 
 // Menu items.
 interface MenuItem {
@@ -63,13 +65,37 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   onPageChange,
   activePage,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("http://localhost:8000/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        // Redirect to login page or update auth state
+        window.location.href = "/login";
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const menuItems: MenuItem[] = [
     { id: "Home", label: "Home", icon: Home },
     { id: "Search", label: "Search", icon: Search },
     { id: "Settings", label: "Settings", icon: Settings },
   ];
+
   return (
-    <Sidebar>
+    <Sidebar className="">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel></SidebarGroupLabel>
@@ -90,10 +116,22 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
-          <SidebarFooter>
-            <ThemeToggle />
-          </SidebarFooter>
         </SidebarGroup>
+        <SidebarFooter className="mt-auto">
+          <div className="flex items-center justify-between">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              disabled={isLoading}
+              className="flex items-center gap-1"
+            >
+              <LogOut size={16} />
+              <span>Logout</span>
+            </Button>
+            <ThemeToggle />
+          </div>
+        </SidebarFooter>
       </SidebarContent>
     </Sidebar>
   );
