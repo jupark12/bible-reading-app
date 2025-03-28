@@ -12,12 +12,20 @@ interface Verse {
   text: string;
 }
 
+interface FavoriteVerse {
+  verse_number: number;
+  text: string;
+  book: string;
+  chapter: number;
+}
+
 export default function BibleReader() {
   const [book, setBook] = useState("Genesis");
   const [chapter, setChapter] = useState("1");
   const [verses, setVerses] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(false);
   const [chunks, setChunks] = useState<Verse[][]>([]);
+  const [favorites, setFavorites] = useState<FavoriteVerse[]>([]);
 
   const fetchVerses = async () => {
     setLoading(true);
@@ -51,6 +59,19 @@ export default function BibleReader() {
     setChapter(selectedChapter);
   };
 
+  const handleVerseClick = (verse: Verse) => {
+    console.log("Verse clicked:", verse);
+    setFavorites([
+      ...favorites,
+      {
+        verse_number: verse.verse_number,
+        text: verse.text,
+        book: book,
+        chapter: parseInt(chapter),
+      },
+    ]);
+  };
+
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -70,7 +91,13 @@ export default function BibleReader() {
               <p key={chunkIndex} className="verse-paragraph">
                 {chunk.map((verse, index) => (
                   // Add tab to first verse in each paragraph
-                  <span key={index} className="verse">
+                  <span
+                    key={index}
+                    className="verse cursor-pointer hover:underline"
+                    onClick={() => {
+                      handleVerseClick(verse);
+                    }}
+                  >
                     <span
                       className={
                         "verse-number align-super text-sm text-gray-500" +
@@ -90,6 +117,17 @@ export default function BibleReader() {
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={50}>
         <NotesEditor />
+        <div className="flex flex-col p-6">
+          <h4 className="flex justify-center py-6 text-xl font-bold">
+            Favorite Verses
+          </h4>
+          {favorites.map((favorite) => (
+            <div key={favorite.verse_number}>
+              {favorite.book} {favorite.chapter} {favorite.verse_number}:{" "}
+              {favorite.text}
+            </div>
+          ))}
+        </div>
       </ResizablePanel>
     </ResizablePanelGroup>
   );
