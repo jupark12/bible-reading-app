@@ -180,12 +180,12 @@ const SlashMenu: React.FC<SlashMenuProps> = ({ editor, items, command }) => {
     cursor: "pointer",
     backgroundColor: isSelected ? "#e9ecef" : "transparent",
     fontWeight: isSelected ? "bold" : "normal",
-    borderLeft: isSelected ? "2px solid #007bff" : "2px solid transparent",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
   });
 
+  // In the SlashMenu component's useEffect for keyboard handling
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown") {
@@ -200,6 +200,7 @@ const SlashMenu: React.FC<SlashMenuProps> = ({ editor, items, command }) => {
 
       if (e.key === "Enter") {
         e.preventDefault();
+        e.stopPropagation(); // Stop propagation to prevent the Enter from creating a new line
         // Ensure we don't try to access an undefined option
         const item = items[selectedIndex];
         if (item) {
@@ -208,10 +209,11 @@ const SlashMenu: React.FC<SlashMenuProps> = ({ editor, items, command }) => {
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
+    // Use capture phase to ensure our handler runs before the editor's handler
+    document.addEventListener("keydown", handleKeyDown, true);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown, true);
     };
   }, [selectedIndex, items, command]);
 

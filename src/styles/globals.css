@@ -4,7 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+  --font-sans:
+    var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
@@ -35,7 +36,7 @@
     --chart-4: hsl(94 20% 94%);
     --chart-5: hsl(94 19% 72%);
     --radius: 0.5rem;
-    
+
     /* Sidebar variables */
     --sidebar: hsl(94 66% 99%);
     --sidebar-foreground: hsl(94 64% 5%);
@@ -72,7 +73,7 @@
     --chart-3: hsl(94 5% 15%);
     --chart-4: hsl(94 5% 18%);
     --chart-5: hsl(94 19% 72%);
-    
+
     /* Sidebar variables */
     --sidebar: hsl(94 59% 2%);
     --sidebar-foreground: hsl(94 19% 100%);
@@ -83,7 +84,7 @@
     --sidebar-border: hsl(94 12% 10%);
     --sidebar-ring: hsl(94 16% 72%);
   }
-  
+
   * {
     @apply border-border outline-ring/50;
   }
