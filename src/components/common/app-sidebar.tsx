@@ -10,6 +10,7 @@ import {
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -18,6 +19,7 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "../ui/sidebar";
+import { ThemeToggle } from "../ui/theme-toggle";
 
 // Menu items.
 interface MenuItem {
@@ -88,6 +90,9 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
+          <SidebarFooter>
+            <ThemeToggle />
+          </SidebarFooter>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>

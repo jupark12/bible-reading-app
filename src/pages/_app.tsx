@@ -7,6 +7,7 @@ import Head from "next/head";
 import BibleReader from "~/components/BibleReader";
 import SearchVerses from "~/components/SearchVerses";
 import "~/styles/globals.css";
+import { ThemeProvider } from "~/components/ui/theme-provider";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -37,18 +38,20 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
   return (
     <SidebarProvider>
-      <div className={geist.className + " flex min-w-screen"}>
-        <Head>
-          <title>Bible Reading App</title>
-          <meta name="description" content="Read the Bible with this app" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <AppSidebar onPageChange={handlePageChange} activePage={activePage} />
-        <SidebarTrigger className="fixed left-0 z-10" />
-        <main className="ml-2 flex flex-1 justify-center">
-          {renderContent()}
-        </main>
-      </div>
+      <ThemeProvider>
+        <div className={geist.className + " flex min-w-screen"}>
+          <Head>
+            <title>Bible Reading App</title>
+            <meta name="description" content="Read the Bible with this app" />
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
+          <AppSidebar onPageChange={handlePageChange} activePage={activePage} />
+          <SidebarTrigger className="fixed left-0 z-10" />
+          <main className="ml-2 flex flex-1 justify-center overflow-x-hidden">
+            {renderContent()}
+          </main>
+        </div>
+      </ThemeProvider>
     </SidebarProvider>
   );
 };

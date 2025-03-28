@@ -38,7 +38,7 @@
     --radius: 0.5rem;
 
     /* Sidebar variables */
-    --sidebar: hsl(94 66% 99%);
+    --sidebar: hsl(0, 0%, 93%);
     --sidebar-foreground: hsl(94 64% 5%);
     --sidebar-primary: hsl(94 16% 72%);
     --sidebar-primary-foreground: hsl(94 16% 12%);

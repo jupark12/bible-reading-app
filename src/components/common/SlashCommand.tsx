@@ -50,20 +50,6 @@ const options: CommandOption[] = [
       return editor.commands.setHorizontalRule();
     },
   },
-  {
-    title: "Undo",
-    command: (editor) => {
-      console.log("Executing Undo command");
-      return editor.commands.undo();
-    },
-  },
-  {
-    title: "Redo",
-    command: (editor) => {
-      console.log("Executing Redo command");
-      return editor.commands.redo();
-    },
-  },
 ];
 
 // Slash command extension

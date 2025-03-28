@@ -34,12 +34,12 @@ const NotesEditor: React.FC = () => {
   if (!editor) return null;
 
   return (
-    <div>
+    <div className="">
       <div className="">
         <h3 className="bold flex w-full justify-center pt-6 text-2xl font-bold">
           Devotional - {formattedDate}
         </h3>
-        <div className="relative left-0 mb-1 flex justify-between space-x-2 align-middle">
+        <div className="relative left-0 mx-2.5 mb-1 flex justify-between space-x-2 align-middle">
           <div>
             <button
               onClick={() => editor.commands.undo()}
@@ -69,7 +69,7 @@ const NotesEditor: React.FC = () => {
         </div>
       </div>
 
-      <EditorContent editor={editor} className="border p-6" />
+      <EditorContent editor={editor} className="p-6" />
     </div>
   );
 };

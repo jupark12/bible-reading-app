@@ -6,6 +6,7 @@ import {
 } from "./ui/resizable";
 import { BibleSelector } from "./common/bible-selector";
 import NotesEditor from "./common/NotesEditor";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 interface Verse {
   verse_number: number;
@@ -60,16 +61,29 @@ export default function BibleReader() {
   };
 
   const handleVerseClick = (verse: Verse) => {
-    console.log("Verse clicked:", verse);
-    setFavorites([
-      ...favorites,
-      {
-        verse_number: verse.verse_number,
-        text: verse.text,
-        book: book,
-        chapter: parseInt(chapter),
-      },
-    ]);
+    // Check if verse already exists in favorites
+    const verseExists = favorites.some(
+      (fav) =>
+        fav.book === book &&
+        fav.chapter === parseInt(chapter) &&
+        fav.verse_number === verse.verse_number,
+    );
+
+    // Only add if it doesn't already exist
+    if (!verseExists) {
+      console.log("Verse added to favorites:", verse);
+      setFavorites([
+        ...favorites,
+        {
+          verse_number: verse.verse_number,
+          text: verse.text,
+          book: book,
+          chapter: parseInt(chapter),
+        },
+      ]);
+    } else {
+      console.log("Verse already in favorites");
+    }
   };
 
   return (
@@ -106,7 +120,16 @@ export default function BibleReader() {
                     >
                       {verse.verse_number}
                     </span>{" "}
-                    {verse.text}{" "}
+                    {favorites.some(
+                      (fav) =>
+                        fav.book === book &&
+                        fav.chapter === parseInt(chapter) &&
+                        fav.verse_number === verse.verse_number,
+                    ) ? (
+                      <mark className="bg-accent">{verse.text}</mark>
+                    ) : (
+                      verse.text
+                    )}{" "}
                   </span>
                 ))}
               </p>
@@ -121,12 +144,20 @@ export default function BibleReader() {
           <h4 className="flex justify-center py-6 text-xl font-bold">
             Favorite Verses
           </h4>
-          {favorites.map((favorite) => (
-            <div key={favorite.verse_number}>
-              {favorite.book} {favorite.chapter} {favorite.verse_number}:{" "}
-              {favorite.text}
-            </div>
-          ))}
+          <div className="space-y-4">
+            {favorites.map((favorite, index) => (
+              <Card key={index}>
+                <CardHeader className="">
+                  <CardTitle className="text-md font-bold">
+                    {favorite.book} {favorite.chapter}:{favorite.verse_number}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pb-2">
+                  <p>{favorite.text}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </ResizablePanel>
     </ResizablePanelGroup>
