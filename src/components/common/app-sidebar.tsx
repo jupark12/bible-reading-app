@@ -59,11 +59,15 @@ const items = [
 interface AppSidebarProps {
   onPageChange: (page: Page) => void;
   activePage: Page;
+  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 export const AppSidebar: React.FC<AppSidebarProps> = ({
   onPageChange,
   activePage,
+  setLoggedIn,
+  setUser,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -76,8 +80,8 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
       });
 
       if (response.ok) {
-        // Redirect to login page or update auth state
-        window.location.href = "/login";
+        setLoggedIn(false);
+        setUser(null);
       } else {
         console.error("Logout failed");
       }
