@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -16,11 +16,13 @@ import {
 interface LoginPageProps {
   checkAuth: () => Promise<boolean>;
   setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  setCurrentDevotional: React.Dispatch<React.SetStateAction<Devotional | null>>;
 }
 
 export const LoginPage: React.FC<LoginPageProps> = ({
   checkAuth,
   setLoggedIn,
+  setCurrentDevotional,
 }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -53,7 +55,25 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       });
 
       if (response.ok) {
-        const data = await response.json();
+        // Set existing Devotional
+        const devotionalResponse = await fetch(
+          "http://localhost:8000/devotionals/today",
+          {
+            method: "GET",
+            credentials: "include",
+            headers: { Accept: "application/json" },
+          },
+        );
+
+        if (devotionalResponse.ok) {
+          const devotionalData: Devotional = await devotionalResponse.json();
+          setCurrentDevotional(devotionalData);
+        } else {
+          console.log(
+            "Error getting current devotional:",
+            devotionalResponse.status,
+          );
+        }
         setLoggedIn(true);
         checkAuth();
       } else {

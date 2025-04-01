@@ -35,29 +35,6 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     setActivePage(page);
   };
 
-  // Render the appropriate content based on activePage
-  const renderContent = () => {
-    switch (activePage) {
-      case "Home":
-        return (
-          <BibleReader
-            setCurrentDevotional={setCurrentDevotional}
-            currentDevotional={currentDevotional}
-          />
-        );
-      case "Search":
-        return <SearchVerses />;
-      // case 'Settings':
-      //   return <Settings />;
-      default:
-        return (
-          <BibleReader
-            setCurrentDevotional={setCurrentDevotional}
-            currentDevotional={currentDevotional}
-          />
-        );
-    }
-  };
   // Define an async function to perform the check
   const checkAuthStatus = async (): Promise<boolean> => {
     try {
@@ -86,7 +63,6 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         if (devotionalResponse.ok) {
           const devotionalData: Devotional = await devotionalResponse.json();
           setCurrentDevotional(devotionalData);
-          console.log("Current Devotional:", devotionalData);
         } else {
           console.log(
             "Error getting current devotional:",
@@ -127,6 +103,30 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     );
   }
 
+  // Render the appropriate content based on activePage
+  const renderContent = () => {
+    switch (activePage) {
+      case "Home":
+        return (
+          <BibleReader
+            setCurrentDevotional={setCurrentDevotional}
+            currentDevotional={currentDevotional}
+          />
+        );
+      case "Search":
+        return <SearchVerses />;
+      // case 'Settings':
+      //   return <Settings />;
+      default:
+        return (
+          <BibleReader
+            setCurrentDevotional={setCurrentDevotional}
+            currentDevotional={currentDevotional}
+          />
+        );
+    }
+  };
+
   // Render login page or main app based on loggedIn state
   return (
     <>
@@ -160,7 +160,11 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         </SidebarProvider>
       ) : (
         // Pass the state setters to the LoginPage so it can update state on successful login
-        <LoginPage checkAuth={checkAuthStatus} setLoggedIn={setLoggedIn} />
+        <LoginPage
+          checkAuth={checkAuthStatus}
+          setLoggedIn={setLoggedIn}
+          setCurrentDevotional={setCurrentDevotional}
+        />
       )}
     </>
   );
