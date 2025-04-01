@@ -5,7 +5,7 @@ An app I created to help me read the Bible and take devotional notes more. Neede
 ## Features
 - Bible Reader: Navigate through books and chapters of the Bible (ASV Translation only for now)
 - Verse highlighting: Mark and save your favorite verses for the current day's devotional
-- Devotional journal: Write and save daily devotional reflections
+- Devotional journal: Write and save daily devotional reflections with TipTap package I added rich text editing
 - Devotional History: View past devotionals and favorite verses
 - User Profiles: Able to register and login
 - Built the backend using FastAPI and Postgres in this other repo here: https://github.com/jupark12/bible-api
