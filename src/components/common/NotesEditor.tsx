@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -13,11 +13,13 @@ interface NotesEditorProps {
   setCurrentDevotional: React.Dispatch<React.SetStateAction<Devotional | null>>;
   currentDevotional: Devotional | null;
   favorites: FavoriteVerse[];
+  setFavorites: React.Dispatch<React.SetStateAction<FavoriteVerse[]>>;
 }
 const NotesEditor: React.FC<NotesEditorProps> = ({
   setCurrentDevotional,
   currentDevotional,
   favorites,
+  setFavorites,
 }) => {
   // Format the current date as MM-DD-YY
   const today = new Date();
@@ -25,6 +27,12 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
   const day = today.getDate();
   const year = today.getFullYear().toString().slice(-2); // Get last 2 digits of year
   const formattedDate = `${month}/${day}/${year}`;
+
+  useEffect(() => {
+    if (currentDevotional?.favorite_verses) {
+      setFavorites(currentDevotional.favorite_verses);
+    }
+  }, [currentDevotional, setFavorites]);
 
   const editor = useEditor({
     extensions: [
@@ -50,27 +58,43 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
       return;
     }
 
-    // Get the devotional content
     const devotionalContent = editor.getHTML();
 
-    // Send the devotional content and date to the server
-    const response = await fetch("http://localhost:8000/devotionals/save", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        reflection: devotionalContent,
-      }),
-    });
+    try {
+      // Add try...catch for fetch errors
+      const response = await fetch("http://localhost:8000/devotionals/save", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          reflection: devotionalContent,
+          favorite_verses: favorites.map(({ verse_id }) => verse_id),
+        }),
+      });
 
-    if (response.ok) {
-      const devotionalData = await response.json();
-      setCurrentDevotional(devotionalData);
-      toast.success("Devotional saved successfully!");
-    } else {
-      toast.error("Error saving devotional.");
+      if (response.ok) {
+        // Explicitly type the expected response structure
+        const devotionalData: Devotional = await response.json();
+
+        // Update parent component's state
+        setCurrentDevotional(devotionalData);
+
+        toast.success("Devotional saved successfully!");
+      } else {
+        // Handle specific errors if possible
+        const errorData = await response
+          .json()
+          .catch(() => ({ detail: "Unknown error saving devotional." }));
+        console.error("Error saving devotional:", response.status, errorData);
+        toast.error(
+          `Error saving devotional: ${errorData.detail || response.statusText}`,
+        );
+      }
+    } catch (error) {
+      console.error("Network or other error saving devotional:", error);
+      toast.error("A network error occurred while saving.");
     }
   };
 
@@ -127,7 +151,8 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
             <Card key={index}>
               <CardHeader className="">
                 <CardTitle className="text-md font-bold">
-                  {favorite.book} {favorite.chapter}:{favorite.verse_number}
+                  {favorite.book_name} {favorite.chapter_number}:
+                  {favorite.verse_number}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pb-2">

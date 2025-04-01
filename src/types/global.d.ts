@@ -8,15 +8,18 @@ type User = {
 };
 
 interface Verse {
+  id: number;
   verse_number: number;
   text: string;
 }
 
 interface FavoriteVerse {
+  verse_id: number;
   verse_number: number;
   text: string;
-  book: string;
-  chapter: number;
+  book_name: string;
+  chapter_number: number;
+  devotional_id: number;
 }
 
 type Devotional = {
@@ -26,4 +29,5 @@ type Devotional = {
   reflection: string;
   created_at: Date;
   updated_at: Date;
+  favorite_verses: FavoriteVerse[];
 };

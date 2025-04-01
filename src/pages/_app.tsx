@@ -47,7 +47,6 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         const userData: User = await response.json();
         setUser(userData);
         setLoggedIn(true);
-        console.log("User authenticated via cookie:", userData);
 
         getTodayDevotional(setCurrentDevotional);
 

@@ -100,7 +100,7 @@ export default function Devotionals() {
     >
       <ResizablePanel defaultSize={20} minSize={20}>
         <div className="devotional-list-panel mr-6 p-6">
-          <h2 className="mb-2 text-2xl font-bold">Devotional History</h2>
+          <h2 className="mb-2 text-2xl font-bold">History</h2>
           <hr></hr>
           <ul className="mt-4">
             {devotionals.map((dev) => (
@@ -119,7 +119,18 @@ export default function Devotionals() {
                 <div className="flex gap-6">
                   <CornerDownRight size={15} />
                   <div className="text-foreground/50 text-sm">
-                    {"favorite verses here"}
+                    {dev.favorite_verses && dev.favorite_verses.length > 0 ? (
+                      <ol className="list-decimal pl-4">
+                        {dev.favorite_verses.slice(0, 5).map((verse, index) => (
+                          <li key={index}>
+                            {verse.book_name} {verse.chapter_number}:
+                            {verse.verse_number}
+                          </li>
+                        ))}
+                      </ol>
+                    ) : (
+                      <span>No favorite verses</span>
+                    )}
                   </div>
                 </div>
               </li>
@@ -133,7 +144,8 @@ export default function Devotionals() {
           {selectedDevotional ? (
             <>
               <h3 className="text-primary italic">
-                {formatDate(selectedDevotional.devotional_date)}
+                {"Devotional on " +
+                  formatDate(selectedDevotional.devotional_date)}
               </h3>
               {/*
               WARNING: Only use dangerouslySetInnerHTML if you trust the source
