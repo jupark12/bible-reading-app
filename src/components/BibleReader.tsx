@@ -6,52 +6,73 @@ import {
 } from "./ui/resizable";
 import { BibleSelector } from "./common/bible-selector";
 import NotesEditor from "./common/NotesEditor";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { toast } from "sonner"; // Ensure sonner is installed and configured
 
-interface Verse {
-  verse_number: number;
-  text: string;
+interface BibleReaderProps {
+  setCurrentDevotional: React.Dispatch<React.SetStateAction<Devotional | null>>;
+  currentDevotional: Devotional | null;
 }
 
-interface FavoriteVerse {
-  verse_number: number;
-  text: string;
-  book: string;
-  chapter: number;
-}
-
-export default function BibleReader() {
+export const BibleReader: React.FC<BibleReaderProps> = ({
+  setCurrentDevotional,
+  currentDevotional,
+}) => {
   const [book, setBook] = useState("Genesis");
   const [chapter, setChapter] = useState("1");
-  const [verses, setVerses] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(false);
   const [chunks, setChunks] = useState<Verse[][]>([]);
   const [favorites, setFavorites] = useState<FavoriteVerse[]>([]);
 
+  const MAX_FAVORITES = 5; // Define the maximum limit
+
+  // --- Fetch Verses ---
   const fetchVerses = async () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:8000/verses/${book}/${chapter}`,
+        // Ensure your API endpoint exists and is correct
+        // Consider using environment variables for the base URL
+        `http://localhost:8000/verses/${encodeURIComponent(book)}/${encodeURIComponent(chapter)}`,
       );
-      const data = await response.json();
-      const chunks = [];
-      for (let i = 0; i < data.length; i += 5) {
-        chunks.push(data.slice(i, i + 5));
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      setChunks(chunks);
-      setVerses(data);
+      const data: Verse[] = await response.json(); // Assuming API returns Verse[]
+
+      // Chunking logic
+      const verseChunks: Verse[][] = [];
+      for (let i = 0; i < data.length; i += 5) {
+        verseChunks.push(data.slice(i, i + 5));
+      }
+      setChunks(verseChunks);
     } catch (error) {
       console.error("Error fetching verses:", error);
+      toast.error("Failed to load verses. Please try again."); // User-friendly error
+      setChunks([]); // Clear chunks on error
     } finally {
       setLoading(false);
     }
   };
 
+  // --- Effect for fetching verses when book/chapter changes ---
   useEffect(() => {
     fetchVerses();
-  }, [book, chapter]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [book, chapter]); // Dependencies: fetch verses when book or chapter changes
 
+  // --- Effect to potentially load favorites from currentDevotional ---
+  // This assumes your NotesEditor doesn't already handle syncing favorites
+  // If NotesEditor *does* sync, this might be redundant or cause conflicts
+  useEffect(() => {
+    if (currentDevotional?.favorite_verses) {
+      setFavorites(currentDevotional.favorite_verses);
+    } else {
+      // If devotional changes and has no favorites, clear local favorites
+      setFavorites([]);
+    }
+  }, [currentDevotional]);
+
+  // --- Handle Book/Chapter Selection ---
   const handleSelectionChange = (
     selectedBook: string,
     selectedChapter: string,
@@ -60,106 +81,130 @@ export default function BibleReader() {
     setChapter(selectedChapter);
   };
 
+  // --- Handle Verse Click (Add/Remove Favorite) ---
   const handleVerseClick = (verse: Verse) => {
-    // Check if verse already exists in favorites
-    const verseExists = favorites.some(
-      (fav) =>
-        fav.book === book &&
-        fav.chapter === parseInt(chapter) &&
-        fav.verse_number === verse.verse_number,
+    const currentChapterNumber = parseInt(chapter, 10); // Ensure chapter is a number
+
+    // Check if verse already exists in favorites using its unique ID
+    const verseExistsIndex = favorites.findIndex(
+      (fav) => fav.verse_id === verse.id,
     );
 
-    // Only add if it doesn't already exist
-    if (!verseExists) {
-      console.log("Verse added to favorites:", verse);
-      setFavorites([
-        ...favorites,
-        {
-          verse_number: verse.verse_number,
-          text: verse.text,
-          book: book,
-          chapter: parseInt(chapter),
-        },
-      ]);
+    if (verseExistsIndex !== -1) {
+      // --- Verse already favorited: Remove it ---
+      setFavorites(favorites.filter((_, index) => index !== verseExistsIndex));
     } else {
-      console.log("Verse already in favorites");
+      // --- Verse not favorited: Try to add it ---
+      if (favorites.length >= MAX_FAVORITES) {
+        // Check if limit is reached
+        toast.error(
+          `Maximum of ${MAX_FAVORITES} favorite verses reached for today's devotional.`,
+        );
+      } else {
+        // Limit not reached: Add the new favorite verse
+        setFavorites([
+          ...favorites,
+          {
+            verse_id: verse.id,
+            verse_number: verse.verse_number,
+            text: verse.text,
+            book_name: book, // Current book
+            chapter_number: currentChapterNumber, // Current chapter number
+            devotional_id: currentDevotional?.devotional_id || 0, // Add devotional_id from current devotional
+          },
+        ]);
+      }
     }
+  };
+
+  // Helper to check if a verse is currently favorited for highlighting
+  const isFavorited = (verseId: number): boolean => {
+    return favorites.some((fav) => fav.verse_id === verseId);
   };
 
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="min-h-[200px] max-w-md rounded-lg md:min-w-fit"
+      className="min-h-[200px] w-full rounded-lg border" // Added border for visual separation
     >
-      <ResizablePanel defaultSize={50}>
-        <div className="container mx-auto p-6">
-          <div className="mb-6">
+      {/* Left Panel: Bible Reader */}
+      <ResizablePanel defaultSize={50} minSize={25}>
+        <div className="flex h-full flex-col p-4">
+          {" "}
+          {/* Use flex-col for layout */}
+          <div className="mb-4 flex w-full justify-center">
             <BibleSelector
               onSelectionChange={handleSelectionChange}
               initialBook={book}
               initialChapter={chapter}
             />
           </div>
-          <div className="flex flex-col">
-            {chunks.map((chunk, chunkIndex) => (
-              <p key={chunkIndex} className="verse-paragraph">
-                {chunk.map((verse, index) => (
-                  // Add tab to first verse in each paragraph
-                  <span
-                    key={index}
-                    className="verse cursor-pointer hover:underline"
-                    onClick={() => {
-                      handleVerseClick(verse);
-                    }}
-                  >
+          {/* Scrollable Verse Area */}
+          <div className="flex-grow overflow-y-auto">
+            {" "}
+            {/* Make this part scrollable */}
+            {loading ? (
+              <div className="flex h-full items-center justify-center">
+                Loading verses...
+              </div>
+            ) : chunks.length === 0 ? (
+              <div className="flex h-full items-center justify-center text-gray-500">
+                No verses found.
+              </div>
+            ) : (
+              chunks.map((chunk, chunkIndex) => (
+                <p
+                  key={chunkIndex}
+                  className="verse-paragraph mb-2 leading-relaxed"
+                >
+                  {" "}
+                  {/* Add margin-bottom */}
+                  {chunk.map((verse, index) => (
                     <span
-                      className={
-                        "verse-number align-super text-sm text-gray-500" +
-                        (index == 0 ? " ml-4" : "")
-                      }
+                      key={verse.id} // Use unique verse ID as key
+                      className="verse hover:text-primary cursor-pointer" // Use theme color on hover
+                      onClick={() => handleVerseClick(verse)}
+                      title={`Click to ${isFavorited(verse.id) ? "remove from" : "add to"} favorites`} // Tooltip
                     >
-                      {verse.verse_number}
-                    </span>{" "}
-                    {favorites.some(
-                      (fav) =>
-                        fav.book === book &&
-                        fav.chapter === parseInt(chapter) &&
-                        fav.verse_number === verse.verse_number,
-                    ) ? (
-                      <mark className="bg-accent">{verse.text}</mark>
-                    ) : (
-                      verse.text
-                    )}{" "}
-                  </span>
-                ))}
-              </p>
-            ))}
+                      <span
+                        className={`verse-number text-muted-foreground mr-1 align-super text-xs ${index === 0 ? "ml-4" : ""}`} // Use theme color, adjust margin
+                      >
+                        {verse.verse_number}
+                      </span>
+                      {isFavorited(verse.id) ? (
+                        <mark className="bg-accent text-accent-foreground rounded px-1">
+                          {" "}
+                          {/* Style the highlight */}
+                          {verse.text}
+                        </mark>
+                      ) : (
+                        verse.text
+                      )}{" "}
+                      {/* Add space after each verse */}
+                    </span>
+                  ))}
+                </p>
+              ))
+            )}
           </div>
         </div>
       </ResizablePanel>
+
+      {/* Handle */}
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={50}>
-        <NotesEditor />
-        <div className="flex flex-col p-6">
-          <h4 className="flex justify-center py-6 text-xl font-bold">
-            Favorite Verses
-          </h4>
-          <div className="space-y-4">
-            {favorites.map((favorite, index) => (
-              <Card key={index}>
-                <CardHeader className="">
-                  <CardTitle className="text-md font-bold">
-                    {favorite.book} {favorite.chapter}:{favorite.verse_number}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pb-2">
-                  <p>{favorite.text}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+
+      {/* Right Panel: Notes Editor */}
+      <ResizablePanel defaultSize={50} minSize={25}>
+        {/* Ensure NotesEditor is wrapped in a layout container if needed */}
+        <div className="h-full">
+          <NotesEditor
+            setCurrentDevotional={setCurrentDevotional}
+            currentDevotional={currentDevotional}
+            favorites={favorites}
+            setFavorites={setFavorites} // Pass setFavorites down if NotesEditor needs to modify them directly
+          />
         </div>
       </ResizablePanel>
     </ResizablePanelGroup>
   );
-}
+};

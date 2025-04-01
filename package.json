@@ -37,6 +37,7 @@
     "react-dom": "^19.0.0",
     "react-resizable-panels": "^2.1.7",
     "shadcn-ui": "^0.9.5",
+    "sonner": "^2.0.2",
     "tailwind-merge": "^3.0.2",
     "tippy.js": "^6.3.7",
     "tw-animate-css": "^1.2.4",
