@@ -6,19 +6,6 @@ import {
 } from "./ui/resizable";
 import { BibleSelector } from "./common/bible-selector";
 import NotesEditor from "./common/NotesEditor";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-
-interface Verse {
-  verse_number: number;
-  text: string;
-}
-
-interface FavoriteVerse {
-  verse_number: number;
-  text: string;
-  book: string;
-  chapter: number;
-}
 
 interface BibleReaderProps {
   setCurrentDevotional: React.Dispatch<React.SetStateAction<Devotional | null>>;
@@ -152,26 +139,8 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
         <NotesEditor
           setCurrentDevotional={setCurrentDevotional}
           currentDevotional={currentDevotional}
+          favorites={favorites}
         />
-        <div className="flex flex-col p-6">
-          <h4 className="flex justify-center py-6 text-xl font-bold">
-            Favorite Verses
-          </h4>
-          <div className="space-y-4">
-            {favorites.map((favorite, index) => (
-              <Card key={index}>
-                <CardHeader className="">
-                  <CardTitle className="text-md font-bold">
-                    {favorite.book} {favorite.chapter}:{favorite.verse_number}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pb-2">
-                  <p>{favorite.text}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
       </ResizablePanel>
     </ResizablePanelGroup>
   );

@@ -7,6 +7,18 @@ type User = {
   last_name: string;
 };
 
+interface Verse {
+  verse_number: number;
+  text: string;
+}
+
+interface FavoriteVerse {
+  verse_number: number;
+  text: string;
+  book: string;
+  chapter: number;
+}
+
 type Devotional = {
   devotional_id: number;
   user_id: number;

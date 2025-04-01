@@ -7,14 +7,17 @@ import { SlashCommand } from "./SlashCommand";
 import { Undo2, Redo2 } from "lucide-react"; // Import icons
 import { toast } from "sonner";
 import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 interface NotesEditorProps {
   setCurrentDevotional: React.Dispatch<React.SetStateAction<Devotional | null>>;
   currentDevotional: Devotional | null;
+  favorites: FavoriteVerse[];
 }
 const NotesEditor: React.FC<NotesEditorProps> = ({
   setCurrentDevotional,
   currentDevotional,
+  favorites,
 }) => {
   // Format the current date as MM-DD-YY
   const today = new Date();
@@ -114,6 +117,26 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
         editor={editor}
         className="m-4 border-t-2 border-b-2 border-dashed py-6"
       />
+
+      <div className="flex flex-col p-6">
+        <h4 className="flex justify-center py-6 text-xl font-bold">
+          Favorite Verses
+        </h4>
+        <div className="space-y-4">
+          {favorites.map((favorite, index) => (
+            <Card key={index}>
+              <CardHeader className="">
+                <CardTitle className="text-md font-bold">
+                  {favorite.book} {favorite.chapter}:{favorite.verse_number}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pb-2">
+                <p>{favorite.text}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
