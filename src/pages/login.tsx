@@ -2,7 +2,6 @@ import { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import BibleReader from "~/components/BibleReader";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {

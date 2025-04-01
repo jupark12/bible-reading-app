@@ -5,8 +5,16 @@ import Placeholder from "@tiptap/extension-placeholder";
 import "./NotesEditor.css"; // Custom styles
 import { SlashCommand } from "./SlashCommand";
 import { Undo2, Redo2 } from "lucide-react"; // Import icons
+import { toast } from "sonner";
 
-const NotesEditor: React.FC = () => {
+interface NotesEditorProps {
+  setCurrentDevotional: React.Dispatch<React.SetStateAction<Devotional | null>>;
+  currentDevotional: Devotional | null;
+}
+const NotesEditor: React.FC<NotesEditorProps> = ({
+  setCurrentDevotional,
+  currentDevotional,
+}) => {
   // Format the current date as MM-DD-YY
   const today = new Date();
   const month = today.getMonth() + 1; // getMonth() is zero-indexed
@@ -22,7 +30,7 @@ const NotesEditor: React.FC = () => {
       }),
       SlashCommand,
     ],
-    content: "",
+    content: currentDevotional?.reflection || "",
     editorProps: {
       attributes: {
         class: "prose prose-sm focus:outline-none",
@@ -31,12 +39,41 @@ const NotesEditor: React.FC = () => {
     immediatelyRender: false,
   });
 
+  const saveDevotional = async () => {
+    if (!editor) {
+      return;
+    }
+
+    // Get the devotional content
+    const devotionalContent = editor.getHTML();
+
+    // Send the devotional content and date to the server
+    const response = await fetch("http://localhost:8000/devotionals/save", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        reflection: devotionalContent,
+      }),
+    });
+
+    if (response.ok) {
+      const devotionalData = await response.json();
+      setCurrentDevotional(devotionalData);
+      toast.success("Devotional saved successfully!");
+    } else {
+      toast.error("Error saving devotional.");
+    }
+  };
+
   if (!editor) return null;
 
   return (
     <div className="">
       <div className="">
-        <h3 className="bold flex w-full justify-center pt-6 text-2xl font-bold">
+        <h3 className="bold flex w-full justify-center py-6 text-2xl font-bold">
           Devotional - {formattedDate}
         </h3>
         <div className="relative left-0 mx-2.5 mb-1 flex justify-between space-x-2 align-middle">
@@ -60,7 +97,7 @@ const NotesEditor: React.FC = () => {
           </div>
           <div>
             <button
-              onClick={() => console.log("saving note")}
+              onClick={() => saveDevotional()}
               className="bg-accent text-secondary-foreground hover:bg-primary hover:text-accent-foreground mr-1.5 cursor-pointer rounded p-1.5 text-sm"
             >
               Save

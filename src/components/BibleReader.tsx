@@ -20,7 +20,15 @@ interface FavoriteVerse {
   chapter: number;
 }
 
-export default function BibleReader() {
+interface BibleReaderProps {
+  setCurrentDevotional: React.Dispatch<React.SetStateAction<Devotional | null>>;
+  currentDevotional: Devotional | null;
+}
+
+export const BibleReader: React.FC<BibleReaderProps> = ({
+  setCurrentDevotional,
+  currentDevotional,
+}) => {
   const [book, setBook] = useState("Genesis");
   const [chapter, setChapter] = useState("1");
   const [verses, setVerses] = useState<Verse[]>([]);
@@ -139,7 +147,10 @@ export default function BibleReader() {
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={50} minSize={25}>
-        <NotesEditor />
+        <NotesEditor
+          setCurrentDevotional={setCurrentDevotional}
+          currentDevotional={currentDevotional}
+        />
         <div className="flex flex-col p-6">
           <h4 className="flex justify-center py-6 text-xl font-bold">
             Favorite Verses
@@ -162,4 +173,4 @@ export default function BibleReader() {
       </ResizablePanel>
     </ResizablePanelGroup>
   );
-}
+};

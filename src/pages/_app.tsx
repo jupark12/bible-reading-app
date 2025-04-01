@@ -4,11 +4,12 @@ import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
 import { AppSidebar } from "~/components/common/app-sidebar";
 import { useEffect, useState } from "react";
 import Head from "next/head";
-import BibleReader from "~/components/BibleReader";
+import { BibleReader } from "~/components/BibleReader";
 import SearchVerses from "~/components/SearchVerses";
 import "~/styles/globals.css";
 import { ThemeProvider } from "~/components/ui/theme-provider";
 import { LoginPage } from "./login"; // Assuming login.tsx exports LoginPage
+import { Toaster } from "~/components/ui/sonner";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -25,6 +26,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   // Remove accessToken state if solely relying on HttpOnly cookie
   // const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true); // Add loading state
+  const [currentDevotional, setCurrentDevotional] = useState<Devotional | null>(
+    null,
+  ); // Add currentDevotional state
 
   // Handler for page changes
   const handlePageChange = (page: Page) => {
@@ -35,13 +39,23 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   const renderContent = () => {
     switch (activePage) {
       case "Home":
-        return <BibleReader />;
+        return (
+          <BibleReader
+            setCurrentDevotional={setCurrentDevotional}
+            currentDevotional={currentDevotional}
+          />
+        );
       case "Search":
         return <SearchVerses />;
       // case 'Settings':
       //   return <Settings />;
       default:
-        return <BibleReader />;
+        return (
+          <BibleReader
+            setCurrentDevotional={setCurrentDevotional}
+            currentDevotional={currentDevotional}
+          />
+        );
     }
   };
   // Define an async function to perform the check
@@ -58,6 +72,28 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         setUser(userData);
         setLoggedIn(true);
         console.log("User authenticated via cookie:", userData);
+
+        // Set existing Devotional
+        const devotionalResponse = await fetch(
+          "http://localhost:8000/devotionals/today",
+          {
+            method: "GET",
+            credentials: "include",
+            headers: { Accept: "application/json" },
+          },
+        );
+
+        if (devotionalResponse.ok) {
+          const devotionalData: Devotional = await devotionalResponse.json();
+          setCurrentDevotional(devotionalData);
+          console.log("Current Devotional:", devotionalData);
+        } else {
+          console.log(
+            "Error getting current devotional:",
+            devotionalResponse.status,
+          );
+        }
+
         return true;
       } else {
         console.log("User not authenticated via cookie:", response.status);
@@ -119,6 +155,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
                 {renderContent()}
               </main>
             </div>
+            <Toaster />
           </ThemeProvider>
         </SidebarProvider>
       ) : (
