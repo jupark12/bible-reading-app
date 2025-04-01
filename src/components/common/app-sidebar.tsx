@@ -31,32 +31,6 @@ interface MenuItem {
   icon: LucideIcon; // Optional icon name if you want to add icons
 }
 
-const items = [
-  {
-    title: "Home",
-    icon: Home,
-  },
-  //   {
-  //     title: "Inbox",
-  //     url: "#",
-  //     icon: Inbox,
-  //   },
-  //   {
-  //     title: "Calendar",
-  //     url: "#",
-  //     icon: Calendar,
-  //   },
-  {
-    title: "Search",
-    icon: Search,
-  },
-  //   {
-  //     title: "Settings",
-  //     url: "#",
-  //     icon: Settings,
-  //   },
-];
-
 interface AppSidebarProps {
   onPageChange: (page: Page) => void;
   activePage: Page;
@@ -115,7 +89,11 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
                       className="cursor-pointer"
                     >
                       <item.icon />
-                      <span>{item.label}</span>
+                      <span
+                        className={activePage === item.id ? "font-bold" : ""}
+                      >
+                        {item.label}
+                      </span>
                     </button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
