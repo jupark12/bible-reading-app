@@ -96,10 +96,10 @@ export default function Devotionals() {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="min-h-[200px] w-full rounded-lg"
+      className="min-h-[200px] w-full"
     >
       <ResizablePanel defaultSize={20} minSize={20}>
-        <div className="devotional-list-panel mr-6 p-6">
+        <div className="devotional-list-panel mr-6 p-8">
           <h2 className="mb-2 text-2xl font-bold">History</h2>
           <hr></hr>
           <ul className="mt-4">
@@ -116,11 +116,11 @@ export default function Devotionals() {
                 >
                   {formatDate(dev.devotional_date)}
                 </button>
-                <div className="flex gap-6">
-                  <CornerDownRight size={15} />
+                <div className="flex gap-4">
+                  <CornerDownRight size={15} className="text-foreground/50" />
                   <div className="text-foreground/50 text-sm">
                     {dev.favorite_verses && dev.favorite_verses.length > 0 ? (
-                      <ol className="list-decimal pl-4">
+                      <ol className="list-decimal pl-1">
                         {dev.favorite_verses.slice(0, 5).map((verse, index) => (
                           <li key={index}>
                             {verse.book_name} {verse.chapter_number}:
@@ -140,7 +140,7 @@ export default function Devotionals() {
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={80} minSize={50}>
-        <div className="devotional-content-panel flex-1 p-6">
+        <div className="devotional-content-panel flex-1 p-8">
           {selectedDevotional ? (
             <>
               <h3 className="text-primary italic">
@@ -154,7 +154,7 @@ export default function Devotionals() {
               before being stored in the database.
             */}
               <div
-                className="reflection-content p-5"
+                className="reflection-content p-2"
                 dangerouslySetInnerHTML={{
                   __html: selectedDevotional.reflection,
                 }}

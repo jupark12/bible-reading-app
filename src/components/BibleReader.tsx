@@ -125,7 +125,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="min-h-[200px] w-full rounded-lg border" // Added border for visual separation
+      className="min-h-[200px] w-full" // Added border for visual separation
     >
       {/* Left Panel: Bible Reader */}
       <ResizablePanel defaultSize={50} minSize={25}>
