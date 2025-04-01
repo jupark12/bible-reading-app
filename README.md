@@ -1,29 +1,24 @@
-# Create T3 App
+# Devotional App
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+An app I created to help me read the Bible and take devotional notes more. Needed a way to help me stay intentional with my reading. Also wanted to see my progress and past reflections
 
-## What's next? How do I make an app with this?
+## Features
+- Bible Reader: Navigate through books and chapters of the Bible (ASV Translation only for now)
+- Verse highlighting: Mark and save your favorite verses for the current day's devotional
+- Devotional journal: Write and save daily devotional reflections
+- Devotional History: View past devotionals and favorite verses
+- User Profiles: Able to register and login
+- Built the backend using FastAPI and Postgres in this other repo here: https://github.com/jupark12/bible-api
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## TODOs
+- Devotional Streak: keep track of how many days in a row user saved devotional
+- Keep track of what percentage the user has read the bible
+- Responsive Design make app mobile friendly. Probably just need to make Resizeable Panel components be vertically stacked on mobile
+- Ability to update user profile
+- Ability to customize dashboard with different color schemes
+- Add Pagination to Search results and Devotional history
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Example Video
+I have not deployed my app anywhere, so if anyone wants to use this, please serve both this repo and the bible-api repo locally. Also need to set up and change database url for postgres
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
-
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+[bible-app-demo.webm](https://github.com/user-attachments/assets/54111268-3a32-443a-87c9-cc679721fa77)
