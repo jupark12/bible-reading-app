@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-import "./NotesEditor.css"; // Custom styles
+import "../../styles/NotesEditor.css"; // Custom styles
 import { SlashCommand } from "./SlashCommand";
 import { Undo2, Redo2 } from "lucide-react"; // Import icons
 import { toast } from "sonner";
+import { Button } from "../ui/button";
 
 interface NotesEditorProps {
   setCurrentDevotional: React.Dispatch<React.SetStateAction<Devotional | null>>;
@@ -96,12 +97,13 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
             </button>
           </div>
           <div>
-            <button
+            <Button
               onClick={() => saveDevotional()}
-              className="bg-accent text-secondary-foreground hover:bg-primary hover:text-accent-foreground mr-1.5 cursor-pointer rounded p-1.5 text-sm"
+              variant="outline"
+              className="focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
             >
               Save
-            </button>
+            </Button>
           </div>
         </div>
       </div>

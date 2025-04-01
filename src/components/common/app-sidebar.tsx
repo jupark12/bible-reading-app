@@ -1,4 +1,5 @@
 import {
+  Book,
   Calendar,
   Home,
   Inbox,
@@ -95,7 +96,8 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
   const menuItems: MenuItem[] = [
     { id: "Home", label: "Home", icon: Home },
     { id: "Search", label: "Search", icon: Search },
-    { id: "Settings", label: "Settings", icon: Settings },
+    // { id: "Settings", label: "Settings", icon: Settings },
+    { id: "Devotionals", label: "Devotionals", icon: Book },
   ];
 
   return (

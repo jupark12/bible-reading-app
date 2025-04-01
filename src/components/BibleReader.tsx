@@ -97,7 +97,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="min-h-[200px] max-w-md rounded-lg md:min-w-fit"
+      className="min-h-[200px] w-full rounded-lg"
     >
       <ResizablePanel defaultSize={50} minSize={25}>
         <div className="container mx-auto p-6">
@@ -134,7 +134,9 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                         fav.chapter === parseInt(chapter) &&
                         fav.verse_number === verse.verse_number,
                     ) ? (
-                      <mark className="bg-accent">{verse.text}</mark>
+                      <mark className="bg-accent text-accent-foreground">
+                        {verse.text}
+                      </mark>
                     ) : (
                       verse.text
                     )}{" "}

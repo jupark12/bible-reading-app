@@ -10,13 +10,11 @@ import "~/styles/globals.css";
 import { ThemeProvider } from "~/components/ui/theme-provider";
 import { LoginPage } from "./login"; // Assuming login.tsx exports LoginPage
 import { Toaster } from "~/components/ui/sonner";
+import Devotionals from "~/components/Devotionals";
 
 const geist = Geist({
   subsets: ["latin"],
 });
-
-// Define Page type if not already defined elsewhere
-type Page = "Home" | "Search" | "Settings"; // Add other pages as needed
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   // State to track the active page
@@ -117,6 +115,8 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         return <SearchVerses />;
       // case 'Settings':
       //   return <Settings />;
+      case "Devotionals":
+        return <Devotionals />;
       default:
         return (
           <BibleReader
@@ -141,7 +141,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
                   name="description"
                   content="Read the Bible with this app"
                 />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/favicon.svg" />
               </Head>
               <AppSidebar
                 onPageChange={handlePageChange}

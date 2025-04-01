@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Book Base - Centered -->
+  <rect x="7" y="6" width="18" height="20" rx="1" fill="#f8f8f8" />
+  
+  <!-- Book Cover - Centered -->
+  <rect x="7" y="6" width="18" height="20" rx="1" fill="#e0c9a6" />
+  
+  <!-- Christian Cross - With thinner bars and shorter horizontal bar -->
+  <path d="M15 8h2v14h-2z M11 12h10v2h-10z" fill="#8b4513" />
+</svg>

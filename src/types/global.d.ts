@@ -1,4 +1,4 @@
-type Page = "Home" | "Search" | "Settings";
+type Page = "Home" | "Search" | "Settings" | "Devotionals";
 
 type User = {
   username: string;
@@ -10,7 +10,7 @@ type User = {
 type Devotional = {
   devotional_id: number;
   user_id: number;
-  devotional_date: Date;
+  devotional_date: string;
   reflection: string;
   created_at: Date;
   updated_at: Date;
