@@ -95,9 +95,9 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
 
   const menuItems: MenuItem[] = [
     { id: "Home", label: "Home", icon: Home },
+    { id: "Devotionals", label: "Devotionals", icon: Book },
     { id: "Search", label: "Search", icon: Search },
     // { id: "Settings", label: "Settings", icon: Settings },
-    { id: "Devotionals", label: "Devotionals", icon: Book },
   ];
 
   return (

@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { getTodayDevotional } from "~/lib/utils";
 
 interface LoginPageProps {
   checkAuth: () => Promise<boolean>;
@@ -55,25 +56,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       });
 
       if (response.ok) {
-        // Set existing Devotional
-        const devotionalResponse = await fetch(
-          "http://localhost:8000/devotionals/today",
-          {
-            method: "GET",
-            credentials: "include",
-            headers: { Accept: "application/json" },
-          },
-        );
+        getTodayDevotional(setCurrentDevotional);
 
-        if (devotionalResponse.ok) {
-          const devotionalData: Devotional = await devotionalResponse.json();
-          setCurrentDevotional(devotionalData);
-        } else {
-          console.log(
-            "Error getting current devotional:",
-            devotionalResponse.status,
-          );
-        }
         setLoggedIn(true);
         checkAuth();
       } else {

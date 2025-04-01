@@ -11,6 +11,7 @@ import { ThemeProvider } from "~/components/ui/theme-provider";
 import { LoginPage } from "./login"; // Assuming login.tsx exports LoginPage
 import { Toaster } from "~/components/ui/sonner";
 import Devotionals from "~/components/Devotionals";
+import { getTodayDevotional } from "~/lib/utils";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -48,25 +49,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         setLoggedIn(true);
         console.log("User authenticated via cookie:", userData);
 
-        // Set existing Devotional
-        const devotionalResponse = await fetch(
-          "http://localhost:8000/devotionals/today",
-          {
-            method: "GET",
-            credentials: "include",
-            headers: { Accept: "application/json" },
-          },
-        );
-
-        if (devotionalResponse.ok) {
-          const devotionalData: Devotional = await devotionalResponse.json();
-          setCurrentDevotional(devotionalData);
-        } else {
-          console.log(
-            "Error getting current devotional:",
-            devotionalResponse.status,
-          );
-        }
+        getTodayDevotional(setCurrentDevotional);
 
         return true;
       } else {

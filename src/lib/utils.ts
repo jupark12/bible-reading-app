@@ -1,8 +1,9 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { toast } from "sonner";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 // Bible books with their chapter counts
@@ -73,4 +74,24 @@ export const bibleBooks = [
   { name: "3 John", chapters: 1 },
   { name: "Jude", chapters: 1 },
   { name: "Revelation", chapters: 22 },
-]
+];
+
+export const getTodayDevotional = async (
+  setCurrentDevotional: React.Dispatch<React.SetStateAction<Devotional | null>>,
+) => {
+  const devotionalResponse = await fetch(
+    "http://localhost:8000/devotionals/today",
+    {
+      method: "GET",
+      credentials: "include",
+      headers: { Accept: "application/json" },
+    },
+  );
+
+  if (devotionalResponse.ok) {
+    const devotionalData: Devotional = await devotionalResponse.json();
+    setCurrentDevotional(devotionalData);
+  } else {
+    toast.error("Failed to fetch today's devotional");
+  }
+};

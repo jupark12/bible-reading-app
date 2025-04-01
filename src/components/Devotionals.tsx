@@ -6,7 +6,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "./ui/resizable";
-import { Loader } from "lucide-react";
+import { CornerDownRight, Loader, PanelRight } from "lucide-react";
 
 export default function Devotionals() {
   const [devotionals, setDevotionals] = useState<Devotional[]>([]);
@@ -98,13 +98,13 @@ export default function Devotionals() {
       direction="horizontal"
       className="min-h-[200px] w-full rounded-lg"
     >
-      <ResizablePanel defaultSize={15} minSize={20}>
+      <ResizablePanel defaultSize={20} minSize={20}>
         <div className="devotional-list-panel mr-6 p-6">
-          <h2 className="mb-2 text-2xl font-bold">Devotional Dates</h2>
+          <h2 className="mb-2 text-2xl font-bold">Devotional History</h2>
           <hr></hr>
           <ul className="mt-4">
             {devotionals.map((dev) => (
-              <li key={dev.devotional_id}>
+              <li key={dev.devotional_id} className="pb-4">
                 <button
                   onClick={() => handleDateClick(dev)}
                   className={
@@ -116,13 +116,19 @@ export default function Devotionals() {
                 >
                   {formatDate(dev.devotional_date)}
                 </button>
+                <div className="flex gap-6">
+                  <CornerDownRight size={15} />
+                  <div className="text-foreground/50 text-sm">
+                    {"favorite verses here"}
+                  </div>
+                </div>
               </li>
             ))}
           </ul>
         </div>
       </ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel defaultSize={85} minSize={85}>
+      <ResizableHandle withHandle />
+      <ResizablePanel defaultSize={80} minSize={50}>
         <div className="devotional-content-panel flex-1 p-6">
           {selectedDevotional ? (
             <>

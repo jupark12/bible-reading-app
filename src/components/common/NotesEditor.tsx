@@ -31,7 +31,9 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
       }),
       SlashCommand,
     ],
-    content: currentDevotional?.reflection || "",
+    content: currentDevotional?.reflection
+      ? currentDevotional.reflection
+      : "<h1>Scripture:{book} {chapter}</h3><p></p><p></p><h2>Observations:</h2><p></p><p></p><hr><h2>Reflections:</h2><p></p><p></p><hr><h2>Applications:</h2><p></p><p></p><hr>",
     editorProps: {
       attributes: {
         class: "prose prose-sm focus:outline-none",
