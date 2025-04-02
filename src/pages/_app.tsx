@@ -48,7 +48,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         setUser(userData);
         setLoggedIn(true);
 
-        getTodayDevotional(setCurrentDevotional);
+        await getTodayDevotional(setCurrentDevotional);
 
         return true;
       } else {

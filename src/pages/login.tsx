@@ -56,7 +56,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       });
 
       if (response.ok) {
-        getTodayDevotional(setCurrentDevotional);
+        await getTodayDevotional(setCurrentDevotional);
 
         setLoggedIn(true);
         checkAuth();
