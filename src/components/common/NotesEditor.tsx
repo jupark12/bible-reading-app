@@ -10,16 +10,12 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 interface NotesEditorProps {
-  setCurrentDevotional: React.Dispatch<React.SetStateAction<Devotional | null>>;
   currentDevotional: Devotional | null;
   favorites: FavoriteVerse[];
-  setFavorites: React.Dispatch<React.SetStateAction<FavoriteVerse[]>>;
 }
 const NotesEditor: React.FC<NotesEditorProps> = ({
-  setCurrentDevotional,
   currentDevotional,
   favorites,
-  setFavorites,
 }) => {
   // Format the current date as MM-DD-YY
   const today = new Date();
@@ -27,12 +23,6 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
   const day = today.getDate();
   const year = today.getFullYear().toString().slice(-2); // Get last 2 digits of year
   const formattedDate = `${month}/${day}/${year}`;
-
-  useEffect(() => {
-    if (currentDevotional?.favorite_verses) {
-      setFavorites(currentDevotional.favorite_verses);
-    }
-  }, [currentDevotional, setFavorites]);
 
   const editor = useEditor({
     extensions: [
@@ -75,12 +65,6 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
       });
 
       if (response.ok) {
-        // Explicitly type the expected response structure
-        const devotionalData: Devotional = await response.json();
-
-        // Update parent component's state
-        setCurrentDevotional(devotionalData);
-
         toast.success("Devotional saved successfully!");
       } else {
         // Handle specific errors if possible

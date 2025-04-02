@@ -60,17 +60,9 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [book, chapter]); // Dependencies: fetch verses when book or chapter changes
 
-  // --- Effect to potentially load favorites from currentDevotional ---
-  // This assumes your NotesEditor doesn't already handle syncing favorites
-  // If NotesEditor *does* sync, this might be redundant or cause conflicts
   useEffect(() => {
-    if (currentDevotional?.favorite_verses) {
-      setFavorites(currentDevotional.favorite_verses);
-    } else {
-      // If devotional changes and has no favorites, clear local favorites
-      setFavorites([]);
-    }
-  }, [currentDevotional]);
+    setFavorites(currentDevotional?.favorite_verses || []);
+  }, []);
 
   // --- Handle Book/Chapter Selection ---
   const handleSelectionChange = (
@@ -198,10 +190,8 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
         {/* Ensure NotesEditor is wrapped in a layout container if needed */}
         <div className="h-full">
           <NotesEditor
-            setCurrentDevotional={setCurrentDevotional}
             currentDevotional={currentDevotional}
             favorites={favorites}
-            setFavorites={setFavorites} // Pass setFavorites down if NotesEditor needs to modify them directly
           />
         </div>
       </ResizablePanel>
