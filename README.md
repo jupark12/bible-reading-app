@@ -17,6 +17,7 @@ An app I created to help me read the Bible and take devotional notes more. Neede
 - Ability to update user profile
 - Ability to customize dashboard with different color schemes
 - Add Pagination to Search results and Devotional history
+- add timestamp
 
 ## Example Video
 I have not deployed my app anywhere, so if anyone wants to use this, please serve both this repo and the bible-api repo locally. Also need to set up and change database url for postgres
