@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Placeholder from "@tiptap/extension-placeholder";
-import "../../styles/NotesEditor.css"; // Custom styles
-import { SlashCommand } from "./SlashCommand";
-import { Undo2, Redo2 } from "lucide-react"; // Import icons
-import { toast } from "sonner";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import React, { useEffect, useState } from 'react';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Placeholder from '@tiptap/extension-placeholder';
+import '../../styles/NotesEditor.css'; // Custom styles
+import { SlashCommand } from './SlashCommand';
+import { Undo2, Redo2 } from 'lucide-react'; // Import icons
+import { toast } from 'sonner';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { getTodayDevotional } from '~/lib/utils';
 
 interface NotesEditorProps {
+  setCurrentDevotional: React.Dispatch<React.SetStateAction<Devotional | null>>;
   currentDevotional: Devotional | null;
   favorites: FavoriteVerse[];
 }
 const NotesEditor: React.FC<NotesEditorProps> = ({
+  setCurrentDevotional,
   currentDevotional,
   favorites,
 }) => {
@@ -28,16 +31,16 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
     extensions: [
       StarterKit, // Use default StarterKit without configuration
       Placeholder.configure({
-        placeholder: "Write notes or use / to insert a command...",
+        placeholder: 'Write notes or use / to insert a command...',
       }),
       SlashCommand,
     ],
     content: currentDevotional?.reflection
       ? currentDevotional.reflection
-      : "<h1>Scripture:{book} {chapter}</h3><p></p><p></p><h2>Observations:</h2><p></p><p></p><hr><h2>Reflections:</h2><p></p><p></p><hr><h2>Applications:</h2><p></p><p></p><hr>",
+      : '<h1>Scripture:{book} {chapter}</h3><p></p><p></p><h2>Observations:</h2><p></p><p></p><hr><h2>Reflections:</h2><p></p><p></p><hr><h2>Applications:</h2><p></p><p></p><hr>',
     editorProps: {
       attributes: {
-        class: "prose prose-sm focus:outline-none",
+        class: 'prose prose-sm focus:outline-none',
       },
     },
     immediatelyRender: false,
@@ -52,11 +55,11 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
 
     try {
       // Add try...catch for fetch errors
-      const response = await fetch("http://localhost:8000/devotionals/save", {
-        method: "POST",
-        credentials: "include",
+      const response = await fetch('http://localhost:8000/devotionals/save', {
+        method: 'POST',
+        credentials: 'include',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           reflection: devotionalContent,
@@ -65,20 +68,19 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
       });
 
       if (response.ok) {
-        toast.success("Devotional saved successfully!");
+        toast.success('Devotional saved successfully!');
+        await getTodayDevotional(setCurrentDevotional);
       } else {
         // Handle specific errors if possible
         const errorData = await response
           .json()
-          .catch(() => ({ detail: "Unknown error saving devotional." }));
-        console.error("Error saving devotional:", response.status, errorData);
-        toast.error(
-          `Error saving devotional: ${errorData.detail || response.statusText}`,
-        );
+          .catch(() => ({ detail: 'Unknown error saving devotional.' }));
+        console.error('Error saving devotional:', response.status, errorData);
+        toast.error(`Error saving devotional: ${errorData.detail || response.statusText}`);
       }
     } catch (error) {
-      console.error("Network or other error saving devotional:", error);
-      toast.error("A network error occurred while saving.");
+      console.error('Network or other error saving devotional:', error);
+      toast.error('A network error occurred while saving.');
     }
   };
 
@@ -121,22 +123,16 @@ const NotesEditor: React.FC<NotesEditorProps> = ({
         </div>
       </div>
 
-      <EditorContent
-        editor={editor}
-        className="m-4 border-t-2 border-b-2 border-dashed py-6"
-      />
+      <EditorContent editor={editor} className="m-4 border-t-2 border-b-2 border-dashed py-6" />
 
       <div className="flex flex-col p-6">
-        <h4 className="flex justify-center py-6 text-xl font-bold">
-          Favorite Verses
-        </h4>
+        <h4 className="flex justify-center py-6 text-xl font-bold">Favorite Verses</h4>
         <div className="space-y-4">
           {favorites.map((favorite, index) => (
             <Card key={index}>
               <CardHeader className="">
                 <CardTitle className="text-md font-bold">
-                  {favorite.book_name} {favorite.chapter_number}:
-                  {favorite.verse_number}
+                  {favorite.book_name} {favorite.chapter_number}:{favorite.verse_number}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pb-2">
